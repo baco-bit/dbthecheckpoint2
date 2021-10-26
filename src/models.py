@@ -10,8 +10,7 @@ class Users(db.Model):
     last_name = db.Column(db.String(120), unique=False, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    theme = db.Column(db.String(120), unique=False, nullable=True)
-    font_preference = db.Column(db.String(120), unique=False, nullable=True)
+    
     
     role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
     role = db.relationship("Role")
@@ -23,8 +22,7 @@ class Users(db.Model):
             "name": self.name,
             "last_name": self.last_name,
             "email": self.email,
-            "theme": self.theme,
-            "font_preference": self.font_preference
+            "role_id": self.role_id
 
             # do not serialize the password, its a security breach
         }
@@ -70,7 +68,8 @@ class Productos(db.Model):
             "stock": self.stock,
             "fecha_ingreso": self.fecha_ingreso,
             "costo_compra": self.costo_compra,
-            "factura_proveedor": self.factura_proveedor
+            "factura_proveedor": self.factura_proveedor,
+            "categoria_id": self.categoria_id
             # do not serialize the password, its a security breach
         }
 

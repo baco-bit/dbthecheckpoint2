@@ -48,21 +48,42 @@ def handle_hello():
         return jsonify(all_people), 200
 
     if request.method == "POST":
-        body = request.get_json()
+        
+        username= request.json.get("username")
+        name= request.json.get("name")
+        last_name= request.json.get("last_name")
+        password= request.json.get("password")
+        email= request.json.get("email")
+        role_id= request.json.get("role_id")
+        
+        
+        
+        user= Users()
+        user.username = username
+        user.name = name
+        user.last_name = last_name
+        user.password = password
+        user.email = email
+        user.role_id = role_id
+        
+        user.save()
+
+        
+        """body = request.get_json()
         if body is None:
             return "The request body is null", 400
         if "email" not in body:
             return "Especificar email", 400
         if "password" not in body:
-            return "Especificar password", 400
+            return "Especificar password", 400"""
         
         #user = Users()
         #user.save()
 
         
-        onePeople = Users.query.filter_by(email=body["email"]).first()
+        onePeople = Users.query.filter_by(email= email).first()
         if onePeople:
-            if (onePeople.password == body["password"] ):
+            if (onePeople.password == password ):
                 access_token = create_access_token(identity=onePeople.email)
                 data = {
                     "info_user": onePeople.serialize(),
@@ -75,6 +96,8 @@ def handle_hello():
             return("el email no existe"),401
         if onePeople: 
             return jsonify({"status": False, "msg": "Email  already in use"}), 400
+        
+        return jsonify(user.serialize()),201
 
 @app.route("/users/<int:id>", methods=["PUT"])
 def put_users(id):
@@ -84,9 +107,7 @@ def put_users(id):
     last_name= request.json.get("last_name")
     password= request.json.get("password")
     email= request.json.get("email")
-    theme= request.json.get("theme")
-    font_preference= request.json.get("font_preference")
-    
+    role_id= request.json.get("role_id")
     
     user= Users.query.get(id)
     user.username = username
@@ -94,8 +115,7 @@ def put_users(id):
     user.last_name = last_name
     user.password = password
     user.email = email
-    user.theme = theme
-    user.font_preference = font_preference
+    user.role_id = role_id
     user.update()
 
     return jsonify(user.serialize()),200
@@ -131,7 +151,7 @@ def profile():
 
 
 
-@app.route('/productos', methods=["POST", "GET"])
+@app.route('/productos', methods=["GET"])
 def obtener_productos():
     if request.method == "GET":
         all_productos = Productos.query.all()
@@ -139,7 +159,7 @@ def obtener_productos():
 
         return jsonify(all_productos), 200
 
-    else:
+    """else:
         body = request.get_json()
         if body is None:
             return "The request body is null", 400
@@ -150,10 +170,36 @@ def obtener_productos():
             
         return jsonify({ "msg": "ok"}), 200
         #if "categoria" not in body:
-        #    return "Especificar categoria", 400
+        #    return "Especificar categoria", 400"""
     
-    productos= Productos()
-    productos.save()
+@app.route("/productos", methods=["POST"])
+def crear_producto():
+
+    nombre= request.json.get("nombre")
+    codigo_barras= request.json.get("codigo_barras")
+    id_categoria= request.json.get("id_categoria")
+    precio_venta= request.json.get("precio_venta")
+    image= request.json.get("image")
+    stock= request.json.get("stock")
+    fecha_ingreso= request.json.get("fecha_ingreso")
+    costo_compra= request.json.get("costo_compra")
+    factura_proveedor= request.json.get("factura_proveedor")
+    categoria_id= request.json.get("categoria_id")
+
+    producto= Productos()
+    producto.nombre = nombre
+    producto.codigo_barras = codigo_barras
+    producto.id_categoria = id_categoria
+    producto.precio_venta = precio_venta
+    producto.image = image
+    producto.stock = stock
+    producto.fecha_ingreso = fecha_ingreso
+    producto.costo_compra = costo_compra
+    producto.factura_proveedor = factura_proveedor
+    producto.categoria_id = categoria_id
+    producto.save()
+
+    return jsonify(producto.serialize()),201
 
 @app.route("/productos/<int:id>", methods=["PUT"])
 def modificar_producto(id):
