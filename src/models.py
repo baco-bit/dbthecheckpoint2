@@ -38,7 +38,7 @@ class Users(db.Model):
 
     def delete(self):
         db.session.delete(self)
-        db.session.commit(self)
+        db.session.commit()
     
 
 class Productos(db.Model):
@@ -83,7 +83,7 @@ class Productos(db.Model):
 
     def delete(self):
         db.session.delete(self)
-        db.session.commit(self)
+        db.session.commit()
 
 
 class Ventas(db.Model):
@@ -176,7 +176,7 @@ class Categoria(db.Model):
 
     def delete(self):
         db.session.delete(self)
-        db.session.commit(self)
+        db.session.commit()
 
         
 class Ingreso(db.Model):

@@ -51,13 +51,13 @@ def handle_hello():
         body = request.get_json()
         if body is None:
             return "The request body is null", 400
-        if "username" not in body:
-            return "Especificar usuario", 400
+        if "email" not in body:
+            return "Especificar email", 400
         if "password" not in body:
             return "Especificar password", 400
         
-        user = Users()
-        user.save()
+        #user = Users()
+        #user.save()
 
         
         onePeople = Users.query.filter_by(email=body["email"]).first()
@@ -84,22 +84,26 @@ def put_users(id):
     last_name= request.json.get("last_name")
     password= request.json.get("password")
     email= request.json.get("email")
-    role= request.json.get("role")
-
+    theme= request.json.get("theme")
+    font_preference= request.json.get("font_preference")
+    
+    
     user= Users.query.get(id)
+    user.username = username
     user.name = name
     user.last_name = last_name
     user.password = password
     user.email = email
-    user.role = role
+    user.theme = theme
+    user.font_preference = font_preference
     user.update()
 
-    return jsonify(Users.serialize()),200
+    return jsonify(user.serialize()),200
 
 @app.route("/users/<int:id>", methods=["DELETE"])
 def eliminar_usuario(id):
     
-    user=Users.query.get(id)
+    user= Users.query.get(id)
 
     if not user: return jsonify({"status": False, "msg": "Usuario no existe"}),400
 
@@ -176,7 +180,7 @@ def modificar_producto(id):
     producto.factura_proveedor = factura_proveedor
     producto.update()
 
-    return jsonify(Productos.serialize()),200
+    return jsonify(producto.serialize()),200
 
 @app.route("/productos//<int:id>", methods=["DELETE"])
 def eliminar_producto(id):
@@ -234,7 +238,7 @@ def modificar_venta(id):
     venta.total = total
     venta.update()
 
-    return jsonify(Ventas.serialize()),200
+    return jsonify(venta.serialize()),200
 
 @app.route("/ventas//<int:id>", methods=["DELETE"])
 def eliminar_venta(id):
@@ -279,7 +283,7 @@ def modificar_detalleventa(id):
     
     detalleventa.update()
 
-    return jsonify(Detalleventa.serialize()),200
+    return jsonify(detalleventa.serialize()),200
 
 @app.route("/detalleventa/<int:id>", methods=["DELETE"])
 def eliminar_datelleventa(id):
@@ -294,7 +298,7 @@ def eliminar_datelleventa(id):
 
 
 
-@app.route('/categoria', methods=["POST", "GET"])
+@app.route('/categoria', methods=["GET"])
 def obtener_categoria():
     if request.method == "GET":
         all_categoria = Categoria.query.all()
@@ -302,7 +306,21 @@ def obtener_categoria():
 
         return jsonify(all_categoria), 200
 
-    else:
+@app.route("/categoria", methods=["POST"])
+def crear_categoria():
+
+    nombre_cat= request.json.get("nombre_cat")
+    descripcion_cat= request.json.get("descripcion_cat")
+
+    cat= Categoria()
+    cat.nombre_cat= nombre_cat
+    cat.descripcion_cat= descripcion_cat
+    cat.save()
+
+    return jsonify(cat.serialize()), 201
+    
+
+    """else:
         body = request.get_json()
         if body is None:
             return "The request body is null", 400
@@ -311,7 +329,7 @@ def obtener_categoria():
         if "descripcion_cat" not in body:
             return "Especificar descripcion", 400
         
-        return jsonify({ "msg": "ok"}), 200
+        return jsonify({ "msg": "ok"}), 200"""
 
 @app.route("/categoria/<int:id>", methods=["PUT"])
 def modificar_categoria(id):
@@ -326,7 +344,7 @@ def modificar_categoria(id):
     
     categoria.update()
 
-    return jsonify(Categoria.serialize()),200
+    return jsonify(categoria.serialize()),200
 
 @app.route("/categoria/<int:id>", methods=["DELETE"])
 def eliminar_categoria(id):
@@ -389,7 +407,7 @@ def modificar_ingreso(id):
     
     ingreso.update()
 
-    return jsonify(Ingreso.serialize()),200
+    return jsonify(ingreso.serialize()),200
 
 @app.route("/ingreso/<int:id>", methods=["DELETE"])
 def eliminar_ingreso(id):
@@ -437,7 +455,7 @@ def modificar_detalleingreso(id):
     
     detalleingreso.update()
 
-    return jsonify(Detalleingreso.serialize()),200
+    return jsonify(detalleingreso.serialize()),200
 
 @app.route("/detalleingreso/<int:id>", methods=["DELETE"])
 def eliminar_detalleingreso(id):
