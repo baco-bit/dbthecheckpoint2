@@ -1,4 +1,6 @@
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import DateTime
 
 db = SQLAlchemy()
 
@@ -47,7 +49,7 @@ class Productos(db.Model):
     precio_venta = db.Column(db.Float(50), unique=False, nullable=True)
     image = db.Column(db.String(300), unique=False, nullable=True)
     stock = db.Column(db.Integer, unique=False, nullable=True)
-    fecha_ingreso = db.Column(db.String(50), unique=False, nullable=False)
+    fecha_ingreso = db.Column(DateTime(), default=datetime.now())
     costo_compra = db.Column(db.Float(50), unique=False, nullable=False)
     factura_proveedor = db.Column(db.Integer, unique=False, nullable=False)
 
@@ -91,7 +93,7 @@ class Ventas(db.Model):
     tipo_comprobante = db.Column(db.String(120), unique=False, nullable=False)
     numero_comprobante = db.Column(db.String(120), unique=False, nullable=False)
     metodo_pago = db.Column(db.String(120), unique=False, nullable=False)
-    fecha = db.Column(db.String(50), unique=False, nullable=False)
+    fecha = db.Column(DateTime(), default=datetime.now())
     impuesto = db.Column(db.Float, unique=False, nullable=False)
     total = db.Column(db.Float, unique=False, nullable=False)
 
@@ -184,7 +186,7 @@ class Ingreso(db.Model):
     proveedor = db.Column(db.String(120), unique=False, nullable=False)
     tipo_comprobante_ing = db.Column(db.String(120), unique=False, nullable=False)
     numero_comprobante_ing = db.Column(db.String(120), unique=False, nullable=False)
-    fecha_ing = db.Column(db.String(50), unique=False, nullable=False)
+    fecha_ing = db.Column(DateTime(), default=datetime.now())
     impuesto_ing = db.Column(db.Float, unique=False, nullable=False)
     total_ing = db.Column(db.Float, unique=False, nullable=False)
 
