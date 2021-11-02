@@ -227,7 +227,6 @@ class Detalleingreso(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "id_ingreso": self.id_ingreso,
             "id_articulo": self.id_articulo,
             "cantidad_di": self.cantidad_di,
             "precio_di": self.precio_di

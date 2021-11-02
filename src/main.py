@@ -206,18 +206,18 @@ def modificar_producto(id):
 
     nombre= request.json.get("nombre")
     codigo_barras= request.json.get("codigo_barras")
-    id_categoria= request.json.get("id_categoria")
     precio_venta= request.json.get("precio_venta")
     image= request.json.get("image")
     stock= request.json.get("stock")
     fecha_ingreso= request.json.get("fecha_ingreso")
     costo_compra= request.json.get("costo_compra")
     factura_proveedor= request.json.get("factura_proveedor")
+    categoria_id= request.json.get("categoria_id")
 
     producto= Productos.query.get(id)
     producto.nombre = nombre
     producto.codigo_barras = codigo_barras
-    producto.id_categoria = id_categoria
+    producto.categoria_id = categoria_id
     producto.precio_venta = precio_venta
     producto.image = image
     producto.stock = stock
