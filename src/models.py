@@ -101,12 +101,13 @@ class Ventas(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "id_usuario": self.id_usuario,
             "tipo_comprobante": self.tipo_comprobante,
             "numero_comprobante": self.numero_comprobante,
+            "metodo_pago": self.metodo_pago,
             "fecha": self.fecha,
             "impuesto": self.impuesto,
-            "total": self.total
+            "total": self.total,
+            "users_id": self.user_id
         }
     
     def save(self):
@@ -138,6 +139,8 @@ class Detalleventa(db.Model):
             "id": self.id,
             "cantidad": self.cantidad,
             "precio": self.precio
+            "venta_id": self.venta_id
+            "producto_id": self.producto_id
         }
     
     def save(self):

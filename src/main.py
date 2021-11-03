@@ -159,18 +159,6 @@ def obtener_productos():
 
         return jsonify(all_productos), 200
 
-    """else:
-        body = request.get_json()
-        if body is None:
-            return "The request body is null", 400
-        if "codigo_barras" not in body:
-            return "Especificar codigo", 400
-        if "nombre" not in body:
-            return "Especificar nombre", 400
-            
-        return jsonify({ "msg": "ok"}), 200
-        #if "categoria" not in body:
-        #    return "Especificar categoria", 400"""
     
 @app.route("/productos", methods=["POST"])
 def crear_producto():
@@ -224,11 +212,12 @@ def modificar_producto(id):
     producto.fecha_ingreso = fecha_ingreso
     producto.costo_compra = costo_compra
     producto.factura_proveedor = factura_proveedor
+    producto.categoria_id = categoria_id
     producto.update()
 
     return jsonify(producto.serialize()),200
 
-@app.route("/productos//<int:id>", methods=["DELETE"])
+@app.route("/productos/<int:id>", methods=["DELETE"])
 def eliminar_producto(id):
     
     producto=Productos.query.get(id)
@@ -241,7 +230,7 @@ def eliminar_producto(id):
 
 
 
-@app.route('/ventas', methods=["POST", "GET"])
+@app.route('/ventas', methods=["GET"])
 def obtener_ventas():
     if request.method == "GET":
         all_ventas = Ventas.query.all()
@@ -249,22 +238,30 @@ def obtener_ventas():
 
         return jsonify(all_ventas), 200
 
-    if request.method == "POST":
-        body = request.get_json()
-        if body is None:
-            return "The request body is null", 400
-        if "tipo_comprobante" not in body:
-            return "Especificar tipo_comprobante", 400
-        if "numero_comprobante" not in body:
-            return "Especificar numero_comprobante", 400
-        if "fecha" not in body:
-            return "Especificar fecha", 400
-        if "impuesto" not in body:
-            return "Especificar impuesto", 400
-        if "total" not in body:
-            return "Especificar total", 400
+@app.route("/ventas", methods=["POST"])
+def crear_venta():
 
-        return jsonify({ "msg": "ok"}), 200
+    tipo_comprobante= request.json.get("tipo_comprobante")
+    numero_comprobante= request.json.get("numero_comprobante")
+    metodo_pago= request.json.get("metodo_pago")
+    fecha= request.json.get("fecha")
+    impuesto= request.json.get("impuesto")
+    total= request.json.get("total")
+    users_id= request.json.get("users_id")
+
+    venta= Ventas()
+    venta.tipo_comprobante = tipo_comprobante
+    venta.numero_comprobante = numero_comprobante
+    venta.fecha = fecha
+    venta.impuesto = impuesto
+    venta.total = total
+    venta.users_id = users_id
+    venta.save()
+
+    return jsonify(venta.serialize()),201
+
+    
+        
         
 @app.route("/ventas/<int:id>", methods=["PUT"])
 def modificar_venta(id):
@@ -275,18 +272,21 @@ def modificar_venta(id):
     fecha= request.json.get("fecha")
     impuesto= request.json.get("impuesto")
     total= request.json.get("total")
+    users_id= request.json.get("users_id")
 
     venta= Ventas.query.get(id)
     venta.tipo_comprobante = tipo_comprobante
     venta.numero_comprobante = numero_comprobante
+    venta.metodo_pago = metodo_pago
     venta.fecha = fecha
     venta.impuesto = impuesto
     venta.total = total
+    venta.users_id= users_id
     venta.update()
 
     return jsonify(venta.serialize()),200
 
-@app.route("/ventas//<int:id>", methods=["DELETE"])
+@app.route("/ventas/<int:id>", methods=["DELETE"])
 def eliminar_venta(id):
     
     venta=Ventas.query.get(id)
@@ -299,7 +299,7 @@ def eliminar_venta(id):
 
 
 
-@app.route('/detalleventa', methods=["POST", "GET"])
+@app.route('/detalleventa', methods=["GET"])
 def obtener_detalleventa():
     if request.method == "GET":
         all_detalleventa = Detalleventa.query.all()
@@ -307,26 +307,39 @@ def obtener_detalleventa():
 
         return jsonify(all_detalleventa), 200
 
-    else:
-        body = request.get_json()
-        if body is None:
-            return "The request body is null", 400
-        if "cantidad" not in body:
-            return "Especificar cantidad", 400
-        if "precio" not in body:
-            return "Especificar precio", 400
+@app.route("/detalleventa", methods=["POST"])
+def crear_detalleventa():
+
+    cantidad= request.json.get("cantidad")
+    precio= request.json.get("precio")
+    venta_id= request.json.get("venta_id")
+    producto_id= request.json.get("producto_id")
+    
+
+    detalleventa= Detalleventa()
+    detalleventa.cantidad = cantidad
+    detalleventa.precio = precio
+    detalleventa.venta_id = venta_id
+    detalleventa.producto_id = producto_id
+    detalleventa.save()
+
+    return jsonify(detalleventa.serialize()),201
+
 
 @app.route("/detalleventa/<int:id>", methods=["PUT"])
 def modificar_detalleventa(id):
 
     cantidad= request.json.get("cantidad")
     precio= request.json.get("precio")
+    venta_id= request.json.get("venta_id")
+    producto_id= request.json.get("producto_id")
     
 
     detalleventa= Detalleventa.query.get(id)
     detalleventa.tipo_comprobante = tipo_comprobante
     detalleventa.numero_comprobante = numero_comprobante
-    
+    detalleventa.venta_id = venta_id
+    detalleventa.producto_id = producto_id
     detalleventa.update()
 
     return jsonify(detalleventa.serialize()),200
