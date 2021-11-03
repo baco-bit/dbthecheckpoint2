@@ -67,19 +67,6 @@ def handle_hello():
         user.role_id = role_id
         
         user.save()
-
-        
-        """body = request.get_json()
-        if body is None:
-            return "The request body is null", 400
-        if "email" not in body:
-            return "Especificar email", 400
-        if "password" not in body:
-            return "Especificar password", 400"""
-        
-        #user = Users()
-        #user.save()
-
         
         onePeople = Users.query.filter_by(email= email).first()
         if onePeople:
@@ -159,7 +146,6 @@ def obtener_productos():
 
         return jsonify(all_productos), 200
 
-    
 @app.route("/productos", methods=["POST"])
 def crear_producto():
 
@@ -259,10 +245,7 @@ def crear_venta():
     venta.save()
 
     return jsonify(venta.serialize()),201
-
-    
-        
-        
+      
 @app.route("/ventas/<int:id>", methods=["PUT"])
 def modificar_venta(id):
 
@@ -324,7 +307,6 @@ def crear_detalleventa():
     detalleventa.save()
 
     return jsonify(detalleventa.serialize()),201
-
 
 @app.route("/detalleventa/<int:id>", methods=["PUT"])
 def modificar_detalleventa(id):
@@ -418,7 +400,7 @@ def eliminar_categoria(id):
 
 
 
-@app.route('/ingreso', methods=["POST", "GET"])
+@app.route('/ingreso', methods=["GET"])
 def obtener_ingreso():
     if request.method == "GET":
         all_ingreso = Ingreso.query.all()
@@ -426,24 +408,29 @@ def obtener_ingreso():
 
         return jsonify(all_ingreso), 200
 
-    else:
-        body = request.get_json()
-        if body is None:
-            return "The request body is null", 400
-        if "proveedor" not in body:
-            return "Especificar proveedor", 400
-        if "tipo_comprobante_ing" not in body:
-            return "Especificar tipo_comprobante_ing", 400
-        if "numero_comprobante_ing" not in body:
-            return "Especificar numero_comprobante", 400
-        if "fecha_ing" not in body:
-            return "Especificar fecha", 400
-        if "impuesto_ing" not in body:
-            return "Especificar impuesto", 400
-        if "total_ing" not in body:
-            return "Especificar total", 400
+@app.route("/ingreso", methods=["POST"])
+def crear_ingreso():
 
-        return jsonify({ "msg": "ok"}), 200
+    proveedor= request.json.get("proveedor")
+    tipo_comprobante_ing= request.json.get("tipo_comprobante_ing")
+    numero_comprobante_ing= request.json.get("numero_comprobante_ing")
+    fecha_ing= request.json.get("fecha_ing")
+    impuesto_ing= request.json.get("impuesto_ingt")
+    total_ing= request.json.get("total_ing")
+    users_id= request.json.get("users_id")
+    
+
+    ingreso= Categoria()
+    ingreso.proveedor = proveedor
+    ingreso.tipo_comprobante_ing = tipo_comprobante_ing
+    ingreso.numero_comprobante_ing = numero_comprobante_ing
+    ingreso.fecha_ing = fecha_ing
+    ingreso.impuesto_ing = impuesto_ing
+    ingreso.total_ing = total_ing
+    ingreso.users_id = users_id
+    ingreso.save()
+
+    return jsonify(ingreso.serialize()),201
 
 @app.route("/ingreso/<int:id>", methods=["PUT"])
 def modificar_ingreso(id):
@@ -481,7 +468,7 @@ def eliminar_ingreso(id):
 
 
 
-@app.route('/detalleingreso', methods=["POST", "GET"])
+@app.route('/detalleingreso', methods=["GET"])
 def obtener_detalleingreso():
     if request.method == "GET":
         all_detalleingreso = Detalleingreso.query.all()
@@ -489,16 +476,22 @@ def obtener_detalleingreso():
 
         return jsonify(all_detalleingreso), 200
 
-    else:
-        body = request.get_json()
-        if body is None:
-            return "The request body is null", 400
-        if "cantidad_di" not in body:
-            return "Especificar cantidad_di", 400
-        if "precio_di" not in body:
-            return "Especificar precio_di", 400
-            
-        return jsonify({ "msg": "ok"}), 200
+@app.route("/detalleingreso", methods=["POST"])
+def crear_detalleingreso():
+
+    cod_articulo= request.json.get("cod_articulo")
+    cantidad_di= request.json.get("cantidad_di")
+    precio_di= request.json.get("precio_di")
+    ingreso_id= request.json.get("ingreso_id")
+    
+    detalleingreso= Detalleingreso()
+    detalleingreso.cod_articulo = cod_articulo
+    detalleingreso.cantidad_di = cantidad_di
+    detalleingreso.precio_di = precio_di
+    detalleingreso.ingreso_id = ingreso_id
+    detalleingreso.save()
+
+    return jsonify(detalleingreso.serialize()),201
     
 @app.route("/detalleingreso/<int:id>", methods=["PUT"])
 def modificar_detalleingreso(id):
