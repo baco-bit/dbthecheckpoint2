@@ -238,6 +238,7 @@ def crear_venta():
     venta= Ventas()
     venta.tipo_comprobante = tipo_comprobante
     venta.numero_comprobante = numero_comprobante
+    venta.metodo_pago = metodo_pago
     venta.fecha = fecha
     venta.impuesto = impuesto
     venta.total = total
@@ -359,18 +360,6 @@ def crear_categoria():
     cat.save()
 
     return jsonify(cat.serialize()), 201
-    
-
-    """else:
-        body = request.get_json()
-        if body is None:
-            return "The request body is null", 400
-        if "nombre_cat" not in body:
-            return "Especificar nombre_cat", 400
-        if "descripcion_cat" not in body:
-            return "Especificar descripcion", 400
-        
-        return jsonify({ "msg": "ok"}), 200"""
 
 @app.route("/categoria/<int:id>", methods=["PUT"])
 def modificar_categoria(id):
@@ -415,12 +404,12 @@ def crear_ingreso():
     tipo_comprobante_ing= request.json.get("tipo_comprobante_ing")
     numero_comprobante_ing= request.json.get("numero_comprobante_ing")
     fecha_ing= request.json.get("fecha_ing")
-    impuesto_ing= request.json.get("impuesto_ingt")
+    impuesto_ing= request.json.get("impuesto_ing")
     total_ing= request.json.get("total_ing")
     users_id= request.json.get("users_id")
     
 
-    ingreso= Categoria()
+    ingreso= Ingreso()
     ingreso.proveedor = proveedor
     ingreso.tipo_comprobante_ing = tipo_comprobante_ing
     ingreso.numero_comprobante_ing = numero_comprobante_ing
@@ -439,11 +428,11 @@ def modificar_ingreso(id):
     tipo_comprobante_ing= request.json.get("tipo_comprobante_ing")
     numero_comprobante_ing= request.json.get("numero_comprobante_ing")
     fecha_ing= request.json.get("fecha_ing")
-    impuesto_ing= request.json.get("impuesto_ingt")
+    impuesto_ing= request.json.get("impuesto_ing")
     total_ing= request.json.get("total_ing")
     
 
-    ingreso= Categoria.query.get(id)
+    ingreso= Ingreso.query.get(id)
     ingreso.proveedor = proveedor
     ingreso.tipo_comprobante_ing = tipo_comprobante_ing
     ingreso.numero_comprobante_ing = numero_comprobante_ing
@@ -479,13 +468,13 @@ def obtener_detalleingreso():
 @app.route("/detalleingreso", methods=["POST"])
 def crear_detalleingreso():
 
-    id_articulo= request.json.get("id_articulo")
+    cod_articulo= request.json.get("cod_articulo")
     cantidad_di= request.json.get("cantidad_di")
     precio_di= request.json.get("precio_di")
     ingreso_id= request.json.get("ingreso_id")
     
     detalleingreso= Detalleingreso()
-    detalleingreso.id_articulo = id_articulo
+    detalleingreso.cod_articulo = cod_articulo
     detalleingreso.cantidad_di = cantidad_di
     detalleingreso.precio_di = precio_di
     detalleingreso.ingreso_id = ingreso_id
@@ -496,13 +485,13 @@ def crear_detalleingreso():
 @app.route("/detalleingreso/<int:id>", methods=["PUT"])
 def modificar_detalleingreso(id):
 
-    id_articulo= request.json.get("id_articulo")
+    cod_articulo= request.json.get("cod_articulo")
     cantidad_di= request.json.get("cantidad_di")
     precio_di= request.json.get("precio_di")
     ingreso_id= request.json.get("ingreso_id")
     
-    detalleingreso= Detallingreso.query.get(id)
-    detalleingreso.id_articulo = id_articulo
+    detalleingreso= Detalleingreso.query.get(id)
+    detalleingreso.cod_articulo = cod_articulo
     detalleingreso.cantidad_di = cantidad_di
     detalleingreso.precio_di = precio_di
     detalleingreso.ingreso_id = ingreso_id
@@ -554,7 +543,7 @@ def crear_role():
     role.descripcion = descripcion
     role.save()
 
-    return jsonify(detalleingreso.serialize()),201
+    return jsonify(role.serialize()),201
 
 @app.route("/role/<int:id>", methods=["PUT"])
 def modificar_role(id):
@@ -567,7 +556,7 @@ def modificar_role(id):
     role.descripcion = descripcion
     role.update()
 
-    return jsonify(detalleingreso.serialize()),200
+    return jsonify(role.serialize()),200
 
 
 

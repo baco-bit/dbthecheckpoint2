@@ -106,7 +106,7 @@ class Ventas(db.Model):
             "fecha": self.fecha,
             "impuesto": self.impuesto,
             "total": self.total,
-            "users_id": self.user_id
+            "users_id": self.users_id
         }
     
     def save(self):
@@ -220,7 +220,7 @@ class Ingreso(db.Model):
 class Detalleingreso(db.Model): 
     __tablename__ = "detallesdeingresos"
     id = db.Column(db.Integer, primary_key=True)
-    id_articulo = db.Column(db.Integer, unique=False, nullable=False)
+    cod_articulo = db.Column(db.Integer, unique=False, nullable=False)
     cantidad_di = db.Column(db.Integer, unique=False, nullable=False)
     precio_di = db.Column(db.Integer, unique=False, nullable=False)
 
@@ -230,7 +230,7 @@ class Detalleingreso(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "id_articulo": self.id_articulo,
+            "id_articulo": self.cod_articulo,
             "cantidad_di": self.cantidad_di,
             "precio_di": self.precio_di,
             "ingreso_id": self.ingreso_id
