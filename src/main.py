@@ -318,8 +318,8 @@ def modificar_detalleventa(id):
     
 
     detalleventa= Detalleventa.query.get(id)
-    detalleventa.tipo_comprobante = tipo_comprobante
-    detalleventa.numero_comprobante = numero_comprobante
+    detalleventa.cantidad = cantidad
+    detalleventa.precio = precio
     detalleventa.venta_id = venta_id
     detalleventa.producto_id = producto_id
     detalleventa.update()
@@ -479,13 +479,13 @@ def obtener_detalleingreso():
 @app.route("/detalleingreso", methods=["POST"])
 def crear_detalleingreso():
 
-    cod_articulo= request.json.get("cod_articulo")
+    id_articulo= request.json.get("id_articulo")
     cantidad_di= request.json.get("cantidad_di")
     precio_di= request.json.get("precio_di")
     ingreso_id= request.json.get("ingreso_id")
     
     detalleingreso= Detalleingreso()
-    detalleingreso.cod_articulo = cod_articulo
+    detalleingreso.id_articulo = id_articulo
     detalleingreso.cantidad_di = cantidad_di
     detalleingreso.precio_di = precio_di
     detalleingreso.ingreso_id = ingreso_id
@@ -499,11 +499,13 @@ def modificar_detalleingreso(id):
     id_articulo= request.json.get("id_articulo")
     cantidad_di= request.json.get("cantidad_di")
     precio_di= request.json.get("precio_di")
+    ingreso_id= request.json.get("ingreso_id")
     
     detalleingreso= Detallingreso.query.get(id)
     detalleingreso.id_articulo = id_articulo
     detalleingreso.cantidad_di = cantidad_di
     detalleingreso.precio_di = precio_di
+    detalleingreso.ingreso_id = ingreso_id
     
     detalleingreso.update()
 
@@ -533,7 +535,7 @@ def eliminar_detalleingreso(id):
 
 
 
-@app.route('/role', methods=["POST", "GET"])
+@app.route('/role', methods=["GET"])
 def obtener_role():
     if request.method == "GET":
         all_role = Role.query.all()
@@ -541,12 +543,32 @@ def obtener_role():
 
         return jsonify(all_role), 200
 
-    else:
-        body = request.get_json()
-        if body is None:
-            return "The request body is null", 400
-        if "nombre_rol" not in body:
-            return "Especificar nombre_rol", 400
+@app.route("/role", methods=["POST"])
+def crear_role():
+
+    nombre_rol= request.json.get("nombre_rol")
+    descripcion= request.json.get("descripcion")
+ 
+    role= Role()
+    role.nombre_rol = nombre_rol
+    role.descripcion = descripcion
+    role.save()
+
+    return jsonify(detalleingreso.serialize()),201
+
+@app.route("/role/<int:id>", methods=["PUT"])
+def modificar_role(id):
+
+    nombre_rol= request.json.get("nombre_rol")
+    descripcion= request.json.get("descripcion")
+ 
+    role= Role.query.get(id)
+    role.nombre_rol = nombre_rol
+    role.descripcion = descripcion
+    role.update()
+
+    return jsonify(detalleingreso.serialize()),200
+
 
 
 @app.route('/metodopago', methods=["POST", "GET"])

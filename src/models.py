@@ -70,7 +70,6 @@ class Productos(db.Model):
             "costo_compra": self.costo_compra,
             "factura_proveedor": self.factura_proveedor,
             "categoria_id": self.categoria_id
-            # do not serialize the password, its a security breach
         }
 
     def save(self):
@@ -138,8 +137,8 @@ class Detalleventa(db.Model):
         return {
             "id": self.id,
             "cantidad": self.cantidad,
-            "precio": self.precio
-            "venta_id": self.venta_id
+            "precio": self.precio,
+            "venta_id": self.venta_id,
             "producto_id": self.producto_id
         }
     
@@ -221,7 +220,7 @@ class Ingreso(db.Model):
 class Detalleingreso(db.Model): 
     __tablename__ = "detallesdeingresos"
     id = db.Column(db.Integer, primary_key=True)
-    cod_articulo = db.Column(db.Integer, unique=False, nullable=False)
+    id_articulo = db.Column(db.Integer, unique=False, nullable=False)
     cantidad_di = db.Column(db.Integer, unique=False, nullable=False)
     precio_di = db.Column(db.Integer, unique=False, nullable=False)
 
@@ -231,7 +230,7 @@ class Detalleingreso(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "cod_articulo": self.cod_articulo,
+            "id_articulo": self.id_articulo,
             "cantidad_di": self.cantidad_di,
             "precio_di": self.precio_di,
             "ingreso_id": self.ingreso_id
@@ -269,6 +268,17 @@ class Role(db.Model):
             "nombre_rol": self.nombre_rol,
             "descripcion": self.descripcion
         }
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit(self)
 
 class Metodopago(db.Model):
     id = db.Column(db.Integer, primary_key=True)
